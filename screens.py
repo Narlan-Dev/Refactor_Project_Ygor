@@ -55,10 +55,23 @@ class BaseScreen(QWidget):
 class FirstScreen(BaseScreen):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.button.setText("Go to Screen 2")  # Customize button text
+        self.button.setText("Go to Screen 2")
 
     def handle_button_click(self):
-        self.parent().setCurrentIndex(1)
+        # Prepare data to pass to the second screen
+        data_to_pass = "Hello from First Screen!"
+        print(f"Passing data: {data_to_pass}")
+        
+        # Access the MainWindow and its screens directly
+        main_window = self.parent()  # This should be MainWindow
+        if main_window:
+            main_window.screen2.receive_data(data_to_pass)  # Call method to pass data
+            print("Data passed successfully.")
+        else:
+            print("Failed to access MainWindow.")
+
+        # Switch to SecondScreen
+        main_window.setCurrentIndex(1)
 
     def setup_specific_ui(self, layout):
         """Setup specific UI elements for FirstScreen"""
@@ -69,7 +82,7 @@ class FirstScreen(BaseScreen):
 class SecondScreen(BaseScreen):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.button.setText("Go to Screen 1")  # Customize button text
+        self.button.setText("Go to Screen 1")
 
     def handle_button_click(self):
         self.parent().setCurrentIndex(0)
@@ -78,30 +91,35 @@ class SecondScreen(BaseScreen):
         """Setup specific UI elements for SecondScreen"""
         specific_label = QLabel("This is Second Screen")
         layout.addWidget(specific_label)
+        self.received_label = QLabel("")  # Label to display received data
+        layout.addWidget(self.received_label)
+
+    def receive_data(self, data):
+        """Receive data from FirstScreen and display it"""
+        print(f"Received data: {data}")
+        self.received_label.setText(data)  # Update the label with received data
 
 # MainWindow that manages the screens
-class MainWindow(QWidget):
+class MainWindow(QStackedWidget):
     def __init__(self):
         super().__init__()
 
-        # Create the stacked widget
-        self.stacked_widget = QStackedWidget()
-
         # Create two screens and add them to the stacked widget
-        self.screen1 = FirstScreen(self.stacked_widget)
-        self.screen2 = SecondScreen(self.stacked_widget)
+        self.screen1 = FirstScreen(self)
+        self.screen2 = SecondScreen(self)
 
-        self.stacked_widget.addWidget(self.screen1)
-        self.stacked_widget.addWidget(self.screen2)
+        self.addWidget(self.screen1)
+        self.addWidget(self.screen2)
 
-        # Set the layout for the main window
-        layout = QVBoxLayout()
-        layout.addWidget(self.stacked_widget)
-        self.setLayout(layout)
+        # Set the window title
+        self.setWindowTitle("Screen Switching Example")
+        self.resize(300, 200)
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    mainWin = MainWindow()
-    mainWin.show()
-    sys.exit(app.exec_())
-
+    try:
+        app = QApplication(sys.argv)
+        mainWin = MainWindow()
+        mainWin.show()
+        sys.exit(app.exec_())
+    except Exception as e:
+        print(f"An error occurred: {e}")
