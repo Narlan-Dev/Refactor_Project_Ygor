@@ -46,6 +46,7 @@ class ShowInfos(QWidget):
         self.addSidebarItem(list_widget, "Password", "icons/qualquer.png")
         list_widget.currentRowChanged.connect(self.displayContent)
         list_widget.setStyleSheet(list_widget_style)
+        list_widget.setFocusPolicy(Qt.NoFocus)
         sidebar_layout.addWidget(list_widget)
         sidebar_layout.addStretch()
 
@@ -82,14 +83,17 @@ class ShowInfos(QWidget):
 
         # Images layout
         image_layout = QVBoxLayout()
+        button_layout = QHBoxLayout()
+        
         self.image_label = QLabel(self)
         self.image_label.setFixedSize(640, 480)
         self.image_label.setAlignment(Qt.AlignCenter)
         self.image_label.setStyleSheet("""
             QLabel {
                 background-color: #333;
-                border: 1px solid rgba(105, 105, 105, 0.397);
+                border: 1px solid rgba(255, 255, 255, 0.1);  /* Borda sutil para harmonizar */
                 border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);  /* Adiciona uma sombra para profundidade */
             }
         """)
         self.image_paths = self.loadImagePaths("public/")  # Replace with the directory where images are stored
@@ -104,11 +108,16 @@ class ShowInfos(QWidget):
 
         next_button.setStyleSheet(button_style)
         prev_button.setStyleSheet(button_style)
-
+        
+        button_layout.addStretch(1)
+        button_layout.addWidget(prev_button)
+        button_layout.addWidget(next_button)
+        button_layout.addStretch(1)
+        
         # Add image and buttons to layout
         image_layout.addWidget(self.image_label)
-        image_layout.addWidget(prev_button)
-        image_layout.addWidget(next_button)
+        image_layout.addSpacing(10)
+        image_layout.addLayout(button_layout)
 
         # Add sidebar, form content, and image layout to the main layout
         main_layout.addWidget(sidebar)
