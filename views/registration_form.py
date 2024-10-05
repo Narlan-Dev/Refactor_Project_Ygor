@@ -10,18 +10,18 @@ class RegistrationForm(QWidget):
 
         # Set HD resolution window size
         self.setWindowTitle("Register Form")
-        self.setFixedSize(1280, 720)  # Full HD resolution
+        self.setFixedSize(1280, 720)
 
         # Main layout to center the card
         main_layout = QVBoxLayout(self)
-        main_layout.setAlignment(Qt.AlignCenter)  # Center the card vertically
+        main_layout.setAlignment(Qt.AlignCenter)
         self.setStyleSheet(main_window_style)
         self.initUI(main_layout)
 
     def initUI(self, main_layout):
         # Create a card (frame) to hold the form
         card = QFrame(self)
-        card.setFixedSize(400, 550)  # Size of the form card
+        card.setFixedSize(400, 550)
         card.setStyleSheet(card_style)
 
         # Layout for the form inside the card
@@ -75,7 +75,7 @@ class RegistrationForm(QWidget):
 
         # Submit button
         submit_button = QPushButton("Submit")
-        submit_button.clicked.connect(self.openNextScreen)  # Connect to new screen
+        submit_button.clicked.connect(self.openNextScreen)
 
         # Sign in message
         signin_label = QLabel('Already have an account? <a href="#">Signin</a>')
@@ -130,4 +130,4 @@ class RegistrationForm(QWidget):
         # Pass the current window (self) as the parent
         self.second_window = ShowInfos(first_name, last_name, email, password, self)
         self.second_window.show()
-        self.hide()  # Hide the first window
+        self.hide()

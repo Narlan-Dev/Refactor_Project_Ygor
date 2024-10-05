@@ -2,14 +2,14 @@ from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButt
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon
 from styles.style import sidebar_style, button_style, label_style, list_widget_style
-import random
+import os
 
 class ShowInfos(QWidget):
     def __init__(self, first_name, last_name, email, password, parent=None):
         super().__init__()
-        self.parent_window = parent  # Store the reference to the parent window
+        self.parent_window = parent
         self.setWindowTitle("Form Details and Images")
-        self.setFixedSize(1280, 720)  # Full HD
+        self.setFixedSize(1280, 720)
 
         # Main layout: Horizontal split
         main_layout = QHBoxLayout(self)
@@ -20,9 +20,9 @@ class ShowInfos(QWidget):
 
         # Program title with icon at the top of the sidebar
         title_layout = QHBoxLayout()
-        icon_label = QLabel()  # Icon placeholder
-        icon_label.setPixmap(QPixmap(32, 32))  # Placeholder for icon size
-        icon_label.setStyleSheet("background-color: #00bfff; border-radius: 16px;")  # Placeholder color for icon
+        icon_label = QLabel()
+        icon_label.setPixmap(QPixmap(32, 32))
+        icon_label.setStyleSheet("background-color: #00bfff; border-radius: 16px;") 
         title_label = QLabel("Mohr Circle")
         title_label.setStyleSheet("""
             QLabel {
@@ -36,7 +36,7 @@ class ShowInfos(QWidget):
         title_layout.addWidget(title_label)
 
         sidebar_layout.addLayout(title_layout)
-        sidebar_layout.addSpacing(30)  # Spacing below the title
+        sidebar_layout.addSpacing(30)
 
         # Sidebar for form fields
         list_widget = QListWidget(self)
@@ -80,10 +80,10 @@ class ShowInfos(QWidget):
         self.content_stack.addWidget(self.email_label)
         self.content_stack.addWidget(self.password_label)
 
-        # Random images layout
+        # Images layout
         image_layout = QVBoxLayout()
         self.image_label = QLabel(self)
-        self.image_label.setFixedSize(640, 480)  # Image size
+        self.image_label.setFixedSize(640, 480)
         self.image_label.setAlignment(Qt.AlignCenter)
         self.image_label.setStyleSheet("""
             QLabel {
@@ -92,7 +92,9 @@ class ShowInfos(QWidget):
                 border-radius: 10px;
             }
         """)
-        self.loadRandomImage()  # Load the first image
+        self.image_paths = self.loadImagePaths("public/")  # Replace with the directory where images are stored
+        self.current_image_index = 0
+        self.loadImage()
 
         # Next/Previous buttons to swipe images
         next_button = QPushButton("Next Image")
@@ -112,11 +114,7 @@ class ShowInfos(QWidget):
         main_layout.addWidget(sidebar)
         main_layout.addWidget(self.content_stack)
         main_layout.addLayout(image_layout)
-
-        # List of random images (placeholders)
-        self.image_paths = ["image1.jpg", "image2.jpg", "image3.jpg", "image4.jpg", "image5.jpg"]
-        self.current_image_index = 0
-
+        
         # Set window background similar to the first screen
         self.setStyleSheet("""
             QWidget {
@@ -135,22 +133,37 @@ class ShowInfos(QWidget):
         # Switch the displayed form field content
         self.content_stack.setCurrentIndex(index)
 
-    def loadRandomImage(self):
-        # Load a random image (using random colors for this example)
-        pixmap = QPixmap(640, 480)
-        pixmap.fill(Qt.green if random.randint(0, 1) else Qt.red)
-        self.image_label.setPixmap(pixmap)
+    def loadImagePaths(self, directory):
+        """Load all image paths from the given directory."""
+        valid_extensions = [".jpg", ".jpeg", ".png", ".bmp", ".gif"]
+        return [os.path.join(directory, file) for file in os.listdir(directory)
+                if os.path.splitext(file)[1].lower() in valid_extensions]
+
+    def loadImage(self):
+        """Load the current image based on the current_image_index."""
+        if self.image_paths:
+            image_path = self.image_paths[self.current_image_index]
+            pixmap = QPixmap(image_path)
+            self.image_label.setPixmap(pixmap.scaled(self.image_label.size(), Qt.KeepAspectRatio))
 
     def loadNextImage(self):
-        # Load the next image in the list
+        if not self.image_paths:
+            print("No images found.")
+            return 
+        
+        # Update the index safely
         self.current_image_index = (self.current_image_index + 1) % len(self.image_paths)
-        self.loadRandomImage()
+        self.loadImage()
 
     def loadPreviousImage(self):
-        # Load the previous image in the list
+        if not self.image_paths:
+            print("No images found.")
+            return
+
+        # Update the index safely
         self.current_image_index = (self.current_image_index - 1) % len(self.image_paths)
-        self.loadRandomImage()
+        self.loadImage()
 
     def returnToFirstScreen(self):
         self.close()  # Close the current window
-        self.parent_window.show()  # Show the parent window (RegistrationForm)
+        self.parent_window.show()
