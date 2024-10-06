@@ -74,6 +74,26 @@ button_style =  """
     }
 """
 
+arrow_button_style = """
+    QPushButton {
+        background-color: #1e90ff;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        min-width: 50px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    QPushButton:hover {
+        background-color: #1c86e2;
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    }
+    QPushButton:pressed {
+        background-color: #1b75d1;
+    }
+"""
+
 list_widget_style = """
     QListWidget {
         background-color: transparent;

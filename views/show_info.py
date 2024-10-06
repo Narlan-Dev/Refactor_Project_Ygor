@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QListWidget, QListWidgetItem, QStackedWidget
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QListWidget, QListWidgetItem, QStackedWidget
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QIcon
-from styles.style import sidebar_style, button_style, label_style, list_widget_style
+from styles.style import sidebar_style, button_style, label_style, list_widget_style, arrow_button_style
 import os
 
 class ShowInfos(QWidget):
@@ -62,7 +62,13 @@ class ShowInfos(QWidget):
 
         # Stacked widget for form data display
         self.content_stack = QStackedWidget(self)
-
+        self.content_stack.setStyleSheet("""
+            QStackedWidget {
+                background-color: transparent;
+                border: none;
+            }
+        """)
+        
         # Labels for form data
         self.first_name_label = QLabel(f"Firstname: {first_name}")
         self.last_name_label = QLabel(f"Lastname: {last_name}")
@@ -83,15 +89,16 @@ class ShowInfos(QWidget):
 
         # Images layout
         image_layout = QVBoxLayout()
-        button_layout = QHBoxLayout()
+        image_layout.setContentsMargins(0, 0, 0, 0)
+        button_grid = QGridLayout()
         
         self.image_label = QLabel(self)
         self.image_label.setFixedSize(640, 480)
         self.image_label.setAlignment(Qt.AlignCenter)
         self.image_label.setStyleSheet("""
             QLabel {
-                background-color: #333;
-                border: 1px solid rgba(255, 255, 255, 0.1);  /* Borda sutil para harmonizar */
+                background-color: transparent;
+                border: none
                 border-radius: 10px;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);  /* Adiciona uma sombra para profundidade */
             }
@@ -101,23 +108,27 @@ class ShowInfos(QWidget):
         self.loadImage()
 
         # Next/Previous buttons to swipe images
-        next_button = QPushButton("Next Image")
-        prev_button = QPushButton("Previous Image")
+        next_button = QPushButton("→")
+        prev_button = QPushButton("←")
         next_button.clicked.connect(self.loadNextImage)
         prev_button.clicked.connect(self.loadPreviousImage)
 
-        next_button.setStyleSheet(button_style)
-        prev_button.setStyleSheet(button_style)
+        next_button.setStyleSheet(arrow_button_style)
+        prev_button.setStyleSheet(arrow_button_style)
         
-        button_layout.addStretch(1)
-        button_layout.addWidget(prev_button)
-        button_layout.addWidget(next_button)
-        button_layout.addStretch(1)
+        button_grid.addWidget(prev_button, 0, 0, Qt.AlignLeft | Qt.AlignBottom) 
+        button_grid.addWidget(next_button, 0, 1, Qt.AlignRight | Qt.AlignBottom)
+        button_grid.setColumnStretch(0, 1)
+        button_grid.setColumnStretch(1, 1)
+        ##button_layout.addStretch(1)
+        ##button_layout.addWidget(prev_button)
+        ##button_layout.addWidget(next_button)
+        ##button_layout.addStretch(1)
         
         # Add image and buttons to layout
         image_layout.addWidget(self.image_label)
-        image_layout.addSpacing(10)
-        image_layout.addLayout(button_layout)
+        #image_layout.addSpacing(10)
+        image_layout.addLayout(button_grid)
 
         # Add sidebar, form content, and image layout to the main layout
         main_layout.addWidget(sidebar)
