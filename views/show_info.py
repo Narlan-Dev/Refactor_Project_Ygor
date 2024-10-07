@@ -5,7 +5,7 @@ from styles.style import sidebar_style, button_style, label_style, list_widget_s
 import os
 
 class ShowInfos(QWidget):
-    def __init__(self, first_name, last_name, email, password, parent=None):
+    def __init__(self, sigma_x_input, sigma_y_input, txy_input, parent=None):
         super().__init__()
         self.parent_window = parent
         self.setWindowTitle("Form Details and Images")
@@ -43,7 +43,6 @@ class ShowInfos(QWidget):
         self.addSidebarItem(list_widget, "Firstname", "icons/qualquer.png")
         self.addSidebarItem(list_widget, "Lastname", "icons/qualquer.png")
         self.addSidebarItem(list_widget, "Email", "icons/qualquer.png")
-        self.addSidebarItem(list_widget, "Password", "icons/qualquer.png")
         list_widget.currentRowChanged.connect(self.displayContent)
         list_widget.setStyleSheet(list_widget_style)
         list_widget.setFocusPolicy(Qt.NoFocus)
@@ -70,22 +69,19 @@ class ShowInfos(QWidget):
         """)
         
         # Labels for form data
-        self.first_name_label = QLabel(f"Firstname: {first_name}")
-        self.last_name_label = QLabel(f"Lastname: {last_name}")
-        self.email_label = QLabel(f"Email: {email}")
-        self.password_label = QLabel(f"Password: {password}")
+        self.first_name_label = QLabel(f"Firstname: {sigma_x_input}")
+        self.last_name_label = QLabel(f"Lastname: {sigma_y_input}")
+        self.email_label = QLabel(f"Email: {txy_input}")
 
         # Styling the labels
         self.first_name_label.setStyleSheet(label_style)
         self.last_name_label.setStyleSheet(label_style)
         self.email_label.setStyleSheet(label_style)
-        self.password_label.setStyleSheet(label_style)
 
         # Add the labels to the stack
         self.content_stack.addWidget(self.first_name_label)
         self.content_stack.addWidget(self.last_name_label)
         self.content_stack.addWidget(self.email_label)
-        self.content_stack.addWidget(self.password_label)
 
         # Images layout
         image_layout = QVBoxLayout()
@@ -120,14 +116,9 @@ class ShowInfos(QWidget):
         button_grid.addWidget(next_button, 0, 1, Qt.AlignRight | Qt.AlignBottom)
         button_grid.setColumnStretch(0, 1)
         button_grid.setColumnStretch(1, 1)
-        ##button_layout.addStretch(1)
-        ##button_layout.addWidget(prev_button)
-        ##button_layout.addWidget(next_button)
-        ##button_layout.addStretch(1)
         
         # Add image and buttons to layout
         image_layout.addWidget(self.image_label)
-        #image_layout.addSpacing(10)
         image_layout.addLayout(button_grid)
 
         # Add sidebar, form content, and image layout to the main layout

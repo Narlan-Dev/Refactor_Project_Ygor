@@ -1,38 +1,42 @@
-main_window_style = """
+card_style = """
     QWidget {
-        background-color: #f0f0f0;
-        font-family: Arial, sans-serif;
+        background-color: #2C3E99;
+        border-radius: 20px;
     }
     QLabel {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 14px;
+        font-family: 'Inter';
+        font-size: 20px;
+        color: #f2f1f1;
     }
     QLineEdit {
-        background-color: #333;
-        color: white;
-        border: 1px solid rgba(105, 105, 105, 0.397);
+        background-color: #f2f1f1;
         padding: 10px;
         border-radius: 10px;
+        border: 2px solid lightgray;
+        font-size: 16px;
+        font-family: 'Inter';
+        qproperty-alignment: AlignCenter;
     }
     QPushButton {
-        background-color: #00bfff;
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 10px;
+        background-color: #f2f1f1;
+        border-radius: 15px;
+        padding: 15px;
         font-size: 16px;
+        font-weight: bold;
+        font-family: 'Inter';
+        width: 150px;
+        color: #7D7D7D;
     }
     QPushButton:hover {
-        background-color: #1c86e2;
+        background-color: lightgray;
     }
 """
 
-card_style = """
-    QFrame {
-        background-color: #1a1a1a;
-        border-radius: 20px;
-        padding: 20px;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+title_layout_style= """
+    QLabel {
+        font-family: 'Inter';
+        font-size: 30px;
+        color: #f2f1f1;
     }
 """
 

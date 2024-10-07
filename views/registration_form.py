@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QFrame
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QFont
-from styles.style import main_window_style, card_style
+from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QPixmap
+from styles.style import card_style, title_layout_style
 from views.show_info import ShowInfos
 
 class RegistrationForm(QWidget):
@@ -9,125 +9,86 @@ class RegistrationForm(QWidget):
         super().__init__()
 
         # Set HD resolution window size
-        self.setWindowTitle("Register Form")
-        self.setFixedSize(1280, 720)
+        self.setWindowTitle('Círculo de Mohr')
+        self.setGeometry(100, 100, 1280, 720)
+        self.setStyleSheet("background-color: white;") 
+        self.initUI()
 
-        # Main layout to center the card
+    def initUI(self):
         main_layout = QVBoxLayout(self)
-        main_layout.setAlignment(Qt.AlignCenter)
-        self.setStyleSheet(main_window_style)
-        self.initUI(main_layout)
-
-    def initUI(self, main_layout):
+        
         # Create a card (frame) to hold the form
-        card = QFrame(self)
-        card.setFixedSize(400, 550)
+        card = QWidget()
+        card.setFixedSize(500, 500)
         card.setStyleSheet(card_style)
-
+        
         # Layout for the form inside the card
-        layout = QVBoxLayout(card)
+        card_layout = QVBoxLayout(card)
+        card_layout.setContentsMargins(40, 40, 40, 40) 
 
         # Title and blue dot
         title_layout = QHBoxLayout()
-
-        # Blue dot
-        self.dot = QLabel(self)
-        self.dot.setStyleSheet("background-color: #00bfff; border-radius: 8px; width: 16px; height: 16px;")
-        self.dot.setFixedSize(16, 16)
+        icon_label = QLabel()
+        pixmap = QPixmap("icons/logo.png")
+        icon_label.setPixmap(pixmap.scaled(90, 90, Qt.KeepAspectRatio))
 
         # Title label
-        title_label = QLabel("Register")
-        title_label.setObjectName("title")
-        title_label.setFont(QFont("Arial", 28, QFont.Bold))
+        title_label = QLabel("Círculo de Mohr")
+        title_label.setFont(QFont('Inter', 52, QFont.Bold))
+        title_label.setAlignment(Qt.AlignCenter)
 
         # Add title and dot to layout
-        title_layout.addWidget(self.dot)
+        title_layout.addWidget(icon_label)
         title_layout.addWidget(title_label)
-        title_layout.setAlignment(Qt.AlignLeft)
+        title_layout.setAlignment(Qt.AlignCenter)
+        title_label.setStyleSheet(title_layout_style)
 
-        # Message label
-        message_label = QLabel("Signup now and get full access to our app.")
-        message_label.setObjectName("message")
-        message_label.setAlignment(Qt.AlignCenter)
+        # Formulário dentro do card
+        form_layout = QFormLayout()
+        form_layout.setSpacing(30)  # Mais espaçamento entre os campos
+        form_layout.setFormAlignment(Qt.AlignCenter)
 
-        # Input fields
-        self.first_name = QLineEdit()
-        self.first_name.setPlaceholderText("Firstname")
+        self.sigma_x_input = QLineEdit()
+        self.sigma_x_input.setPlaceholderText("MPa")
+        self.sigma_x_input.setFixedWidth(250)
+        form_layout.addRow(QLabel("Tensão σx"), self.sigma_x_input)
 
-        self.last_name = QLineEdit()
-        self.last_name.setPlaceholderText("Lastname")
+        self.sigma_y_input = QLineEdit()
+        self.sigma_y_input.setPlaceholderText("MPa")
+        self.sigma_y_input.setFixedWidth(250)
+        form_layout.addRow(QLabel("Tensão σy"), self.sigma_y_input)
 
-        self.email = QLineEdit()
-        self.email.setPlaceholderText("Email")
+        self.txy_input = QLineEdit()
+        self.txy_input.setPlaceholderText("MPa")
+        self.txy_input.setFixedWidth(250)
+        form_layout.addRow(QLabel("Tensão τxy"), self.txy_input)
 
-        self.password = QLineEdit()
-        self.password.setEchoMode(QLineEdit.Password)
-        self.password.setPlaceholderText("Password")
-
-        self.confirm_password = QLineEdit()
-        self.confirm_password.setEchoMode(QLineEdit.Password)
-        self.confirm_password.setPlaceholderText("Confirm Password")
-
-        # Grid layout for first name and last name
-        name_layout = QGridLayout()
-        name_layout.addWidget(self.first_name, 0, 0)
-        name_layout.addWidget(self.last_name, 0, 1)
-
-        # Submit button
-        submit_button = QPushButton("Submit")
+        # Botão SUBMETER
+        submit_button = QPushButton("SUBMETER")
+        submit_button.setFixedHeight(50)
+        submit_button.setFixedWidth(200)
         submit_button.clicked.connect(self.openNextScreen)
+        
+        # Adicionando os widgets no layout do card
+        card_layout.addLayout(title_layout)
+        card_layout.addLayout(form_layout, stretch=1)
+        card_layout.addWidget(submit_button, alignment=Qt.AlignCenter)
 
-        # Sign in message
-        signin_label = QLabel('Already have an account? <a href="#">Signin</a>')
-        signin_label.setObjectName("signin")
-        signin_label.setAlignment(Qt.AlignCenter)
+        # Aplicando o layout ao card
+        card.setLayout(card_layout)
 
-        # Add widgets to the card layout
-        layout.addLayout(title_layout)
-        layout.addWidget(message_label)
-        layout.addLayout(name_layout)
-        layout.addWidget(self.email)
-        layout.addWidget(self.password)
-        layout.addWidget(self.confirm_password)
-        layout.addWidget(submit_button)
-        layout.addWidget(signin_label)
+        # Centraliza o card no layout principal
+        main_layout.addWidget(card, alignment=Qt.AlignCenter)
 
-        # Add the card to the center of the main layout
-        main_layout.addWidget(card)
-
-        # Timer to create a glowing pulse effect on the dot
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.pulseEffect)
-        self.timer.start(500)
-
-    def pulseEffect(self):
-        # Toggle between two styles to mimic the glow effect
-        if self.dot.styleSheet().find("scale(1.0)") != -1:
-            self.dot.setStyleSheet("""
-                background-color: #00bfff;
-                border-radius: 8px;
-                width: 16px;
-                height: 16px;
-                transform: scale(1.5);
-                opacity: 0.7;
-            """)
-        else:
-            self.dot.setStyleSheet("""
-                background-color: #00bfff;
-                border-radius: 8px;
-                width: 16px;
-                height: 16px;
-                transform: scale(1.0);
-                opacity: 1;
-            """)
+        # Define o layout principal da janela
+        self.setLayout(main_layout)
 
     def openNextScreen(self):
-        first_name = self.first_name.text()
-        last_name = self.last_name.text()
-        email = self.email.text()
-        password = self.password.text()
+        sigma_x_input = self.sigma_x_input.text()
+        sigma_y_input = self.sigma_y_input.text()
+        txy_input = self.txy_input.text()
 
         # Pass the current window (self) as the parent
-        self.second_window = ShowInfos(first_name, last_name, email, password, self)
+        self.second_window = ShowInfos(sigma_x_input, sigma_y_input, txy_input, self)
         self.second_window.show()
         self.hide()
