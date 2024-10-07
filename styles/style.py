@@ -134,3 +134,82 @@ list_widget_style = """
         background-color: #1a75d1;
     }
 """
+
+main_window_style = """
+    QMainWindow, QWidget {
+        background-color: #2A2E83;
+        color: white;
+        font-family: 'Segoe UI', sans-serif;
+    }
+    QPushButton {
+        background-color: transparent;
+        color: white;
+        text-align: left;
+        padding: 15px 20px;
+        border: none;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    QPushButton:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+    }
+    QPushButton:pressed {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    QPushButton[selected="true"] {
+        background-color: rgba(255, 255, 255, 0.4);
+        border-radius: 10px;
+        font-weight: bold;
+    }
+    #sidebar {
+        background-color: #343AEB;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        padding-top: 20px;
+    }
+    #content {
+        background-color: #2A2E83;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+    QLabel#sidebar-title {
+        background-color: none;
+        font-size: 24px;
+        font-weight: 600;
+        padding: 10px;
+        text-align: center;
+    }
+    #steps {    
+        font-size: 22px;
+        font-family: 'Segoe UI', sans-serif;
+        color: white;
+        padding: 10px;
+        background-color: #3B48C2;
+        border-radius: 5px;
+    }
+    QPushButton#nav-button {
+        font-size: 24px;
+        padding: 10px;
+        background-color: #2A2E83;
+        border-radius: 5px;
+        color: white;
+    }
+    #nav-button:hover {
+        background-color: #3B48C2;
+    }
+    #return-button {
+        background-color: #4C5CD2;
+        border-radius: 8px;
+        padding: 15px;
+        font-size: 16px;
+        color: white;
+        margin: 20px;
+    }
+    #return-button:hover {
+        background-color: #3B48C2;
+    }
+    QPushButton#return-button {
+        font-weight: 500;
+    }
+"""

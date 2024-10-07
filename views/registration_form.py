@@ -1,51 +1,48 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout
+from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout, QMessageBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
 from styles.style import card_style, title_layout_style
-from views.show_info import ShowInfos
+from views.main_view.main_window import MainWindow
 
 class RegistrationForm(QWidget):
     def __init__(self):
         super().__init__()
-
-        # Set HD resolution window size
         self.setWindowTitle('Círculo de Mohr')
         self.setGeometry(100, 100, 1280, 720)
-        self.setStyleSheet("background-color: white;") 
+        self.setStyleSheet("background-color: white;")
+        self.main_window = None
         self.initUI()
 
     def initUI(self):
         main_layout = QVBoxLayout(self)
         
-        # Create a card (frame) to hold the form
+        # Create card
         card = QWidget()
         card.setFixedSize(500, 500)
         card.setStyleSheet(card_style)
         
-        # Layout for the form inside the card
+        # Card layout
         card_layout = QVBoxLayout(card)
-        card_layout.setContentsMargins(40, 40, 40, 40) 
+        card_layout.setContentsMargins(40, 40, 40, 40)
 
-        # Title and blue dot
+        # Title section
         title_layout = QHBoxLayout()
         icon_label = QLabel()
         pixmap = QPixmap("icons/logo.png")
         icon_label.setPixmap(pixmap.scaled(90, 90, Qt.KeepAspectRatio))
 
-        # Title label
         title_label = QLabel("Círculo de Mohr")
         title_label.setFont(QFont('Inter', 52, QFont.Bold))
         title_label.setAlignment(Qt.AlignCenter)
+        title_label.setStyleSheet(title_layout_style)
 
-        # Add title and dot to layout
         title_layout.addWidget(icon_label)
         title_layout.addWidget(title_label)
         title_layout.setAlignment(Qt.AlignCenter)
-        title_label.setStyleSheet(title_layout_style)
 
-        # Formulário dentro do card
+        # Form layout
         form_layout = QFormLayout()
-        form_layout.setSpacing(30)  # Mais espaçamento entre os campos
+        form_layout.setSpacing(30)
         form_layout.setFormAlignment(Qt.AlignCenter)
 
         self.sigma_x_input = QLineEdit()
@@ -63,32 +60,40 @@ class RegistrationForm(QWidget):
         self.txy_input.setFixedWidth(250)
         form_layout.addRow(QLabel("Tensão τxy"), self.txy_input)
 
-        # Botão SUBMETER
-        submit_button = QPushButton("SUBMETER")
-        submit_button.setFixedHeight(50)
-        submit_button.setFixedWidth(200)
-        submit_button.clicked.connect(self.openNextScreen)
-        
-        # Adicionando os widgets no layout do card
+        # Submit button
+        self.submit_button = QPushButton("SUBMETER")
+        self.submit_button.setFixedHeight(50)
+        self.submit_button.setFixedWidth(200)
+        self.submit_button.clicked.connect(self.openNextScreen)
+
+        # Add widgets to card layout
         card_layout.addLayout(title_layout)
-        card_layout.addLayout(form_layout, stretch=1)
-        card_layout.addWidget(submit_button, alignment=Qt.AlignCenter)
+        card_layout.addLayout(form_layout)
+        card_layout.addWidget(self.submit_button, alignment=Qt.AlignCenter)
 
-        # Aplicando o layout ao card
-        card.setLayout(card_layout)
-
-        # Centraliza o card no layout principal
+        # Add card to main layout
         main_layout.addWidget(card, alignment=Qt.AlignCenter)
 
-        # Define o layout principal da janela
-        self.setLayout(main_layout)
+    def validate_inputs(self):
+        """Validate the input values"""
+        try:
+            sigma_x = float(self.sigma_x_input.text())
+            sigma_y = float(self.sigma_y_input.text())
+            txy = float(self.txy_input.text())
+            return True
+        except ValueError:
+            QMessageBox.warning(self, 'Input Error', 
+                              'Please enter valid numerical values for all fields.')
+            return False
 
     def openNextScreen(self):
-        sigma_x_input = self.sigma_x_input.text()
-        sigma_y_input = self.sigma_y_input.text()
-        txy_input = self.txy_input.text()
+        """Open the MainWindow with the input values"""
+        if self.validate_inputs():
+            sigma_x = self.sigma_x_input.text()
+            sigma_y = self.sigma_y_input.text()
+            txy = self.txy_input.text()
 
-        # Pass the current window (self) as the parent
-        self.second_window = ShowInfos(sigma_x_input, sigma_y_input, txy_input, self)
-        self.second_window.show()
-        self.hide()
+            # Create and show MainWindow
+            self.main_window = MainWindow(sigma_x, sigma_y, txy, self)
+            self.main_window.show()
+            self.hide()

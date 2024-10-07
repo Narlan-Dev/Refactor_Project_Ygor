@@ -4,8 +4,8 @@ from views.registration_form import RegistrationForm
 
 def main():
     app = QApplication(sys.argv)
-    window = RegistrationForm()
-    window.show()
+    registration_form = RegistrationForm()
+    registration_form.show()
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
