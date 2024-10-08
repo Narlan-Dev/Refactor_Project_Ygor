@@ -163,7 +163,7 @@ main_window_style = """
         font-weight: bold;
     }
     #sidebar {
-        background-color: #343AEB;
+        background-color: #4169E1;
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
         padding-top: 20px;
