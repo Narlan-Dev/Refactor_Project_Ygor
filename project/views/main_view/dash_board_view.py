@@ -83,6 +83,8 @@ Builder.load_string('''
                     text_size: self.size
 
                 RoundedButton:
+                    id: sigma_x_button
+                    text: 'Sigma X: '
                     text: 'Information'
                     size_hint_y: None
                     height: 50
@@ -97,6 +99,8 @@ Builder.load_string('''
                     text_size: self.size
 
                 RoundedButton:
+                    id: sigma_y_button
+                    text: 'Sigma Y: '
                     text: 'Information'
                     size_hint_y: None
                     height: 50
@@ -111,10 +115,15 @@ Builder.load_string('''
                     text_size: self.size
 
                 RoundedButton:
+                    id: txy_button
+                    text: 'Txy: '
                     text: 'Information'
                     size_hint_y: None
                     height: 50
 ''')
 
 class DashboardScreen(Screen):
-    pass
+    def update_information(self, sigma_x, sigma_y, txy):
+        self.ids.sigma_x_button.text = f"Sigma X: {sigma_x}"
+        self.ids.sigma_y_button.text = f"Sigma Y: {sigma_y}"
+        self.ids.txy_button.text = f"Txy: {txy}"

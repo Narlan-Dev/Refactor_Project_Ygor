@@ -57,31 +57,83 @@ Builder.load_string('''
                 height: 50
                 bold: True
 
-            MenuButton:
-                text: 'Dashboard'
-                on_release: root.show_screen('dashboard')
-                
-            MenuButton:
-                text: 'Circle Mohr'
-                on_release: root.show_screen('circle')
-                
-            MenuButton:
-                text: 'User'
-                on_release: root.show_screen('user')
-                
-            MenuButton:
-                text: 'Settings'
-                on_release: root.show_screen('settings')
+            # MenuButton with icons
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: 50
+                spacing: 10
+
+                Image:
+                    source: 'icons/qualquer.png'  # Replace with the actual path to your icon
+                    size_hint_x: None
+                    width: 30  # Adjust size as necessary
+
+                MenuButton:
+                    text: 'Dashboard'
+                    on_release: root.show_screen('dashboard')
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: 50
+                spacing: 10
+
+                Image:
+                    source: 'icons/qualquer.png'  # Replace with the actual path to your icon
+                    size_hint_x: None
+                    width: 30
+
+                MenuButton:
+                    text: 'Circle Mohr'
+                    on_release: root.show_screen('circle')
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: 50
+                spacing: 10
+
+                Image:
+                    source: 'icons/qualquer.png'  # Replace with the actual path to your icon
+                    size_hint_x: None
+                    width: 30
+
+                MenuButton:
+                    text: 'User'
+                    on_release: root.show_screen('user')
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: 50
+                spacing: 10
+
+                Image:
+                    source: 'icons/qualquer.png'  # Replace with the actual path to your icon
+                    size_hint_x: None
+                    width: 30
+
+                MenuButton:
+                    text: 'Settings'
+                    on_release: root.show_screen('settings')
                 
             Widget:
                 # Spacer
-                
+
             Button:
                 text: 'Return'
                 size_hint_y: None
                 height: 50
-                background_color: 0.298, 0.361, 0.824, 0.6
+                background_color: 0, 0, 0, 0
                 on_release: root.return_to_registration()
+                canvas.before:
+                    Color:
+                        rgba: 0.298, 0.361, 0.824, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [10, ]
                 
         # Content Area
         ScreenManager:
@@ -111,6 +163,7 @@ class MainWindow(BoxLayout):
         
         # Dashboard screen
         dashboard = DashboardScreen(name='dashboard')
+        dashboard.update_information(self.sigma_x, self.sigma_y, self.txy)
         sm.add_widget(dashboard)
         
         # Circle screen
@@ -130,7 +183,7 @@ class MainWindow(BoxLayout):
         
     def show_screen(self, screen_name):
         self.ids.screen_manager.current = screen_name
-        
+            
     def return_to_registration(self):
         app = App.get_running_app()
         sm = app.root

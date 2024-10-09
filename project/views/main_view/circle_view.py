@@ -72,7 +72,7 @@ class CircleView(BoxLayout):
     def load_image(self):
         if self.image_paths:
             self.ids.image_display.source = self.image_paths[self.current_image_index]
-            self.ids.step_label.text = f'STEP: {self.current_image_index}'
+            self.ids.step_label.text = f'STEP: {self.current_image_index + 1}'
             
     def next_image(self):
         if self.image_paths:
