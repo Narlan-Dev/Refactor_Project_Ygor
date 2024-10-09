@@ -23,11 +23,14 @@ Builder.load_string('''
             center_x: self.parent.center_x
             center_y: self.parent.center_y
             
+            #Steps layout
             BoxLayout:
                 size_hint: None, None
                 size: self.minimum_size
                 center_x: self.parent.center_x
                 orientation: 'horizontal'
+                spacing: 100
+                padding: 10
 
                 NavigationButton:
                     text: '<'

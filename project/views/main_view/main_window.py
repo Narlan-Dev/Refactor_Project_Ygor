@@ -43,7 +43,7 @@ Builder.load_string('''
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
-                    radius: [20, 0, 0, 20]
+                    radius: [0, 20, 20, 0]
             
             orientation: 'vertical'
             size_hint_x: 0.25
@@ -65,10 +65,10 @@ Builder.load_string('''
                 spacing: 10
 
                 Image:
-                    source: 'icons/qualquer.png'  # Replace with the actual path to your icon
+                    source: 'icons/qualquer.png'
                     size_hint_x: None
-                    width: 30  # Adjust size as necessary
-
+                    width: 30
+                    
                 MenuButton:
                     text: 'Dashboard'
                     on_release: root.show_screen('dashboard')
@@ -80,7 +80,7 @@ Builder.load_string('''
                 spacing: 10
 
                 Image:
-                    source: 'icons/qualquer.png'  # Replace with the actual path to your icon
+                    source: 'icons/qualquer.png'
                     size_hint_x: None
                     width: 30
 
@@ -95,7 +95,7 @@ Builder.load_string('''
                 spacing: 10
 
                 Image:
-                    source: 'icons/qualquer.png'  # Replace with the actual path to your icon
+                    source: 'icons/qualquer.png'
                     size_hint_x: None
                     width: 30
 
@@ -110,7 +110,7 @@ Builder.load_string('''
                 spacing: 10
 
                 Image:
-                    source: 'icons/qualquer.png'  # Replace with the actual path to your icon
+                    source: 'icons/qualquer.png'
                     size_hint_x: None
                     width: 30
 
