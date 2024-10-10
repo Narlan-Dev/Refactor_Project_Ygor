@@ -59,7 +59,7 @@ styles = '''
         Line:
             rounded_rectangle: (self.x, self.y, self.width, self.height, 10)
             width: 2
-
+    
 <StylizedLabel@Label>:
     color: app.colors['text_light']
     font_size: '20sp'

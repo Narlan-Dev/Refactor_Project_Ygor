@@ -1,5 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.clock import Clock
 
 Builder.load_string('''
 <DashboardScreen>:
@@ -25,7 +27,7 @@ Builder.load_string('''
                 spacing: 10
 
                 Label:
-                    text: 'Title'
+                    text: 'Rotation'
                     font_size: '36sp'
                     bold: True
                     color: 1, 1, 1, 1
@@ -35,15 +37,26 @@ Builder.load_string('''
                     valign: 'bottom'
 
                 Widget:
-
-                RoundedButton:
-                    text: 'Button to back'
+                
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: 10
                     size_hint: None, None
-                    size: 150, 40
+                    size: 320, 40
                     pos_hint: {'center_y': 0.5}
 
+                    RoundedTextInput:
+                        id: angle
+                        hint_text: 'Turning angle º'
+
+                    RoundedButton:
+                        text: 'Submit angle'
+                        size_hint: None, None
+                        size: 150, 40
+                        on_release: root.handle_rotation()
+
             Label:
-                text: 'Sub Title'
+                text: 'Boners after rotation'
                 font_size: '24sp'
                 color: 0.9, 0.9, 1, 1
                 size_hint_y: None
@@ -53,26 +66,44 @@ Builder.load_string('''
                 text_size: self.size
                 padding: 10, 0
 
+        # Message area
+        Label:
+            id: message_label
+            text: root.message
+            size_hint_y: None
+            height: 30
+            color: (0.9, 0.9, 1, 1) if root.message_type == 'success' else (1, 0.5, 0.5, 1)
+            halign: 'center'
+            valign: 'center'
+            text_size: self.size
+
         # Main content
         BoxLayout:
             orientation: 'horizontal'
             spacing: 20
             padding: 20, 0
 
-            # Image
-            Image:
-                source: 'public/teste1.png'  # Replace with your image path
+            # Image or message
+            BoxLayout:
+                id: image_container
                 size_hint: None, None
                 size: self.parent.width * 0.4, self.parent.width * 0.4
-                allow_stretch: True
-                keep_ratio: True
+
+                Label:
+                    id: image_placeholder
+                    text: 'Image will appear here after submitting an angle'
+                    color: 0.9, 0.9, 1, 1
+                    halign: 'center'
+                    valign: 'center'
+                    text_size: self.size
 
             # Information boxes
             BoxLayout:
                 orientation: 'vertical'
                 spacing: 15
                 size_hint_x: 0.6
-
+                padding: [150, 0, 0, 0]
+                
                 Label:
                     text: 'title at information'
                     size_hint_y: None
@@ -82,9 +113,8 @@ Builder.load_string('''
                     valign: 'center'
                     text_size: self.size
 
-                RoundedButton:
-                    id: sigma_x_button
-                    text: 'Sigma X: '
+                RoundedLabel:
+                    id: test
                     text: 'Information'
                     size_hint_y: None
                     height: 50
@@ -98,10 +128,9 @@ Builder.load_string('''
                     valign: 'center'
                     text_size: self.size
 
-                RoundedButton:
-                    id: sigma_y_button
-                    text: 'Sigma Y: '
-                    text: 'Information'
+                RoundedLabel:
+                    id: sigma_x_label
+                    text: 'Sigma X:'
                     size_hint_y: None
                     height: 50
 
@@ -114,16 +143,70 @@ Builder.load_string('''
                     valign: 'center'
                     text_size: self.size
 
-                RoundedButton:
-                    id: txy_button
-                    text: 'Txy: '
-                    text: 'Information'
+                RoundedLabel:
+                    id: sigma_y_label
+                    text: 'Sigma Y:'
+                    size_hint_y: None
+                    height: 50
+
+                Label:
+                    text: 'title at information'
+                    size_hint_y: None
+                    height: 30
+                    color: 0.9, 0.9, 1, 1
+                    halign: 'center'
+                    valign: 'center'
+                    text_size: self.size
+
+                RoundedLabel:
+                    id: txy_label
+                    text: 'Txy:'
                     size_hint_y: None
                     height: 50
 ''')
 
 class DashboardScreen(Screen):
+    message = StringProperty('')
+    message_type = StringProperty('success')
+    image = ObjectProperty(None)
+
     def update_information(self, sigma_x, sigma_y, txy):
-        self.ids.sigma_x_button.text = f"Sigma X: {sigma_x}"
-        self.ids.sigma_y_button.text = f"Sigma Y: {sigma_y}"
-        self.ids.txy_button.text = f"Txy: {txy}"
+        if sigma_x:
+            self.ids.test.text = f"Test: {int(sigma_x) - 1}"
+            
+        self.ids.sigma_x_label.text = f"Sigma X: {sigma_x}"
+        self.ids.sigma_y_label.text = f"Sigma Y: {sigma_y}"
+        self.ids.txy_label.text = f"Txy: {txy}"
+        
+    def handle_rotation(self):
+        if self.ids.angle.text:
+            try:
+                angle = int(self.ids.angle.text)
+                self.ids.test.text = f"Test: {int(self.ids.test.text.split(': ')[1]) + angle}"
+                self.ids.sigma_x_label.text = f"Sigma X: {int(self.ids.sigma_x_label.text.split(': ')[1]) + angle}"
+                self.ids.sigma_y_label.text = f"Sigma Y: {int(self.ids.sigma_y_label.text.split(': ')[1]) + angle}"
+                self.ids.txy_label.text = f"Txy: {int(self.ids.txy_label.text.split(': ')[1]) + angle}"
+                self.message = "Rotation applied successfully!"
+                self.message_type = 'success'
+                self.load_image()
+            except ValueError:
+                self.message = "Error: Please enter a valid integer for the angle."
+                self.message_type = 'error'
+        else:
+            self.message = "Error: Please enter an angle before submitting."
+            self.message_type = 'error'
+        
+        # Schedule the message to be cleared after 5 seconds
+        Clock.schedule_once(self.clear_message, 5)
+
+    def clear_message(self, dt):
+        self.message = ''
+        self.message_type = 'success'  # Reset to default state
+
+    def load_image(self):
+        from kivy.uix.image import Image
+        if self.image:
+            self.ids.image_container.remove_widget(self.image)
+        self.image = Image(source='public/teste1.png', allow_stretch=True, keep_ratio=True)
+        self.ids.image_container.clear_widgets()
+        self.ids.image_container.add_widget(self.image)
