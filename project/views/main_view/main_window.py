@@ -7,6 +7,7 @@ from kivy.lang import Builder
 from kivy.app import App
 from kivy.properties import ObjectProperty
 from views.main_view.circle_view import CircleView
+from views.main_view.info_view import InfoScreen
 from views.main_view.dash_board_view import DashboardScreen
 from styles import colors
 
@@ -48,7 +49,7 @@ Builder.load_string('''
 <MainWindow>:
     dashboard_button: dashboard_button
     circle_button: circle_button
-    user_button: user_button
+    info_button: info_button
     settings_button: settings_button
 
     canvas.before:
@@ -84,79 +85,86 @@ Builder.load_string('''
                 size_hint_y: None
                 height: 50
                 bold: True
+                padding: [0, 0, 150, 0]
 
             # MenuButton with icons
             BoxLayout:
-                orientation: 'horizontal'
+                orientation:'vertical'
                 size_hint_y: None
-                height: 50
+                height: 250
                 spacing: 10
-
-                Image:
-                    source: 'icons/qualquer.png'
-                    size_hint_x: None
-                    width: 30
+                
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 50
+                    spacing: 10
                     
-                MenuButton:
-                    id: dashboard_button
-                    text: 'Rotate'
-                    on_release: 
-                        root.show_screen('dashboard')
-                        root.select_button(self)
+                    Image:
+                        source: 'icons/qualquer.png'
+                        size_hint_x: None
+                        width: 30
+                        
+                    MenuButton:
+                        id: dashboard_button
+                        text: 'Rotate'
+                        on_release: 
+                            root.show_screen('dashboard')
+                            root.select_button(self)
 
-            BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: None
-                height: 50
-                spacing: 10
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 50
+                    spacing: 10
 
-                Image:
-                    source: 'icons/qualquer.png'
-                    size_hint_x: None
-                    width: 30
+                    Image:
+                        source: 'icons/qualquer.png'
+                        size_hint_x: None
+                        width: 30
 
-                MenuButton:
-                    id: circle_button
-                    text: 'Circle Mohr'
-                    on_release: 
-                        root.show_screen('circle')
-                        root.select_button(self)
+                    MenuButton:
+                        id: circle_button
+                        text: 'Circle Mohr'
+                        on_release: 
+                            root.show_screen('circle')
+                            root.select_button(self)
 
-            BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: None
-                height: 50
-                spacing: 10
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 50
+                    spacing: 10
 
-                Image:
-                    source: 'icons/qualquer.png'
-                    size_hint_x: None
-                    width: 30
+                    Image:
+                        source: 'icons/qualquer.png'
+                        size_hint_x: None
+                        width: 30
 
-                MenuButton:
-                    id: user_button
-                    text: 'User'
-                    on_release: 
-                        root.show_screen('user')
-                        root.select_button(self)
+                    MenuButton:
+                        id: info_button
+                        text: 'Info'
+                        on_release: 
+                            root.show_screen('info')
+                            root.select_button(self)
 
-            BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: None
-                height: 50
-                spacing: 10
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 50
+                    spacing: 10
 
-                Image:
-                    source: 'icons/qualquer.png'
-                    size_hint_x: None
-                    width: 30
+                    Image:
+                        source: 'icons/qualquer.png'
+                        size_hint_x: None
+                        width: 30
 
-                MenuButton:
-                    id: settings_button
-                    text: 'Settings'
-                    on_release: 
-                        root.show_screen('settings')
-                        root.select_button(self)
+                    MenuButton:
+                        id: settings_button
+                        text: 'Settings'
+                        on_release: 
+                            root.show_screen('settings')
+                            root.select_button(self)
                 
             Widget:
                 # Spacer
@@ -190,7 +198,7 @@ Builder.load_string('''
 class MainWindow(BoxLayout):
     dashboard_button = ObjectProperty(None)
     circle_button = ObjectProperty(None)
-    user_button = ObjectProperty(None)
+    info_button = ObjectProperty(None)
     settings_button = ObjectProperty(None)
 
     def __init__(self, sigma_x=None, sigma_y=None, txy=None, previous_screen=None, **kwargs):
@@ -218,9 +226,9 @@ class MainWindow(BoxLayout):
         sm.add_widget(circle)
         
         # User screen
-        user = Screen(name='user')
-        user.add_widget(Label(text='User Profile Content'))
-        sm.add_widget(user)
+        info = Screen(name='info')
+        info.add_widget(InfoScreen())
+        sm.add_widget(info)
         
         # Settings screen
         settings = Screen(name='settings')
