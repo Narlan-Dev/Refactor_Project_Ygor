@@ -1,10 +1,19 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.properties import StringProperty, ObjectProperty
+from kivy.properties import StringProperty, ObjectProperty, BooleanProperty
 from kivy.clock import Clock
+from kivy.metrics import dp
+from kivy.core.window import Window
 
 Builder.load_string('''
+#:import utils kivy.utils
+
+<ResponsiveLabel@Label>:
+    is_mobile: False
+    font_size: self.height * 1 if self.is_mobile else self.height * 0.6
+
 <CircleInfoLayout@BoxLayout>:
+    is_mobile: False
     orientation: 'vertical'
     canvas.before:
         Color:
@@ -14,94 +23,106 @@ Builder.load_string('''
             size: self.size
             radius: [20]
     
-    # Title with bottom border
     BoxLayout:
+        orientation: 'vertical'
         size_hint_y: None
-        height: 60
-        canvas.after:
-            Color:
-                rgba: 1, 1, 1, 1
-            Rectangle:
-                pos: self.x + 15, self.y
-                size: self.width - 30, 1
+        height: dp(70) if root.is_mobile else dp(80)
         
         Label:
             text: 'Informações do círculo'
             color: 1, 1, 1, 1
-            font_size: '30sp'
+            font_size: sp(20) if root.is_mobile else sp(30)
             bold: True
-            padding: [15, 0]
-    
-    # Info content
-    BoxLayout:
-        orientation: 'vertical'
-        padding: [15, 10, 15, 10]
-        spacing: 20
+            size_hint_y: None
+            height: dp(50) if root.is_mobile else dp(60)
+            padding: [dp(15), 0]
         
-        Label:
-            text: 'Tensão normal maxima: 44.5'
-            color: 1, 1, 1, 1
+        Widget:
             size_hint_y: None
-            height: 25
-            text_size: self.size
-            font_size: '20sp'
-            halign: 'left'
+            height: dp(1)
+            canvas:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.x + dp(15), self.y
+                    size: self.width - dp(30), 1
+    
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+        
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: [dp(15), dp(10)]
+            spacing: dp(10) if root.is_mobile else dp(20)
             
-        Label:
-            text: 'Tensão normal minima: 44.5'
-            color: 1, 1, 1, 1
-            size_hint_y: None
-            height: 25
-            text_size: self.size
-            font_size: '20sp'
-            halign: 'left'
+            ResponsiveLabel:
+                is_mobile: root.is_mobile
+                text: 'Tensão normal maxima: 44.5'
+                color: 1, 1, 1, 1
+                size_hint_y: None
+                height: dp(14) if root.is_mobile else dp(25)
+                text_size: self.width, None
+                halign: 'left'
             
-        Label:
-            text: 'Tensão de cisalhamento max: ±44.5'
-            color: 1, 1, 1, 1
-            size_hint_y: None
-            height: 25
-            text_size: self.size
-            font_size: '20sp'
-            halign: 'left'
+            ResponsiveLabel:
+                is_mobile: root.is_mobile
+                text: 'Tensão normal minima: 44.5'
+                color: 1, 1, 1, 1
+                size_hint_y: None
+                height: dp(14) if root.is_mobile else dp(25)
+                text_size: self.width, None
+                halign: 'left'
             
-        Label:
-            text: 'Posição do centro: 44.5'
-            color: 1, 1, 1, 1
-            size_hint_y: None
-            height: 25
-            text_size: self.size
-            font_size: '20sp'
-            halign: 'left'
+            ResponsiveLabel:
+                is_mobile: root.is_mobile
+                text: 'Tensão de cisalhamento max: ±44.5'
+                color: 1, 1, 1, 1
+                size_hint_y: None
+                height: dp(14) if root.is_mobile else dp(25)
+                text_size: self.width, None
+                halign: 'left'
             
-        Label:
-            text: 'Raio: 44.5'
-            color: 1, 1, 1, 1
-            size_hint_y: None
-            height: 25
-            text_size: self.size
-            font_size: '20sp'
-            halign: 'left'
+            ResponsiveLabel:
+                is_mobile: root.is_mobile
+                text: 'Posição do centro: 44.5'
+                color: 1, 1, 1, 1
+                size_hint_y: None
+                height: dp(14) if root.is_mobile else dp(25)
+                text_size: self.width, None
+                halign: 'left'
             
-        Label:
-            text: 'θp: 44.5'
-            color: 1, 1, 1, 1
-            size_hint_y: None
-            height: 25
-            text_size: self.size
-            font_size: '20sp'
-            halign: 'left'
+            ResponsiveLabel:
+                is_mobile: root.is_mobile
+                text: 'Raio: 44.5'
+                color: 1, 1, 1, 1
+                size_hint_y: None
+                height: dp(14) if root.is_mobile else dp(25)
+                text_size: self.width, None
+                halign: 'left'
             
-        Label:
-            text: 'θc: 44.5'
-            color: 1, 1, 1, 1
-            size_hint_y: None
-            height: 25
-            text_size: self.size
-            font_size: '20sp'
-            halign: 'left'
+            ResponsiveLabel:
+                is_mobile: root.is_mobile
+                text: 'θp: 44.5'
+                color: 1, 1, 1, 1
+                size_hint_y: None
+                height: dp(14) if root.is_mobile else dp(25)
+                text_size: self.width, None
+                halign: 'left'
+            
+            ResponsiveLabel:
+                is_mobile: root.is_mobile
+                text: 'θc: 44.5'
+                color: 1, 1, 1, 1
+                size_hint_y: None
+                height: dp(14) if root.is_mobile else dp(25)
+                text_size: self.width, None
+                halign: 'left'
             
 <TableLayout@BoxLayout>:
+    is_mobile: False
     canvas.before:
         Color:
             rgba: utils.get_color_from_hex("#4169E1")
@@ -111,70 +132,70 @@ Builder.load_string('''
             radius: [20]
 
     BoxLayout:
-        orientation: 'horizontal'
+        orientation: 'vertical' if root.is_mobile else 'horizontal'
         
-        # Left side - Title with right border
         BoxLayout:
-            size_hint_x: 0.3
-            canvas.after:
-                Color:
-                    rgba: 1, 1, 1, 1
-                Rectangle:
-                    pos: self.right, self.y + 10
-                    size: 1, self.height - 20
-            
+            size_hint: (1, 0.2) if root.is_mobile else (0.3, 1)          
             Label:
                 text: 'Titulo'
                 color: 1, 1, 1, 1
-                font_size: '24sp'
+                font_size: sp(10) if root.is_mobile else sp(15)
                 bold: True
         
-        # Right side - X/Y columns
         BoxLayout:
             orientation: 'vertical'
-            size_hint_x: 0.7
-            padding: [10, 5]
-            spacing: 5
+            size_hint: (1, 0.8) if root.is_mobile else (0.7, 1)
+            padding: [dp(10), dp(5)]
+            spacing: dp(10)
             
-            # Headers
             BoxLayout:
                 size_hint_y: None
-                height: 30
+                height: dp(30)
                 
                 Label:
                     text: 'X'
                     color: 1, 1, 1, 1
                     bold: True
-                    font_size: '20sp'
+                    font_size: sp(10) if root.is_mobile else sp(15)
                 Label:
                     text: 'Y'
                     color: 1, 1, 1, 1
                     bold: True
-                    font_size: '20sp'
+                    font_size: sp(10) if root.is_mobile else sp(15)
             
-            # First row
             BoxLayout:
-                Label:
+                ResponsiveLabel:
+                    is_mobile: root.is_mobile
                     text: 'θp: 44.5'
                     color: 1, 1, 1, 1
-                Label:
+                    size_hint_y: None
+                    height: dp(10) if root.is_mobile else dp(25)
+                ResponsiveLabel:
+                    is_mobile: root.is_mobile
                     text: 'θp: 44.5'
                     color: 1, 1, 1, 1
+                    size_hint_y: None
+                    height: dp(10) if root.is_mobile else dp(25)
             
-            # Second row
             BoxLayout:
-                Label:
+                ResponsiveLabel:
+                    is_mobile: root.is_mobile
                     text: 'θp: 44.5'
                     color: 1, 1, 1, 1
-                Label:
+                    size_hint_y: None
+                    height: dp(10) if root.is_mobile else dp(25)
+                ResponsiveLabel:
+                    is_mobile: root.is_mobile
                     text: 'θp: 44.5'
                     color: 1, 1, 1, 1
+                    size_hint_y: None
+                    height: dp(10) if root.is_mobile else dp(25)
 
 <InfoScreen>:
     BoxLayout:
         orientation: 'vertical'
-        spacing: 15
-        padding: [20, 20]
+        spacing: dp(10) if root.is_mobile else dp(15)
+        padding: [dp(10), dp(10)] if root.is_mobile else [dp(20), dp(20)]
         canvas.before:
             Color:
                 rgba: utils.get_color_from_hex("#2A2E83")
@@ -182,15 +203,14 @@ Builder.load_string('''
                 pos: self.pos
                 size: self.size
 
-        # Header area
         BoxLayout:
             size_hint_y: None
-            height: 
-            padding: [20, 20, 20, 20]
+            height: dp(60) if root.is_mobile else dp(80)
+            padding: [dp(10), dp(10)] if root.is_mobile else [dp(20), dp(20)]
             
             Label:
                 text: 'Standard Information'
-                font_size: '36sp'
+                font_size: sp(24) if root.is_mobile else sp(36)
                 bold: True
                 color: 1, 1, 1, 1
                 size_hint_x: None
@@ -203,65 +223,71 @@ Builder.load_string('''
             RoundedButton:
                 text: 'Print'
                 size_hint: None, None
-                size: 150, 40
+                size: (dp(100), dp(40)) if root.is_mobile else (dp(150), dp(40))
                 on_release: root.handle_print_infos()
 
-        # Sub Title
         Label:
             text: 'Stresses, angles and positions'
-            font_size: '24sp'
+            font_size: sp(18) if root.is_mobile else sp(24)
             color: 0.7, 0.7, 1, 1
             size_hint_y: None
-            height: 5
+            height: dp(30) if root.is_mobile else dp(40)
             halign: 'left'
             text_size: self.width, None
-            padding: [20, 0, 20, 20]
+            padding: [dp(10), 0] if root.is_mobile else [dp(20), 0]
             
-        # Message
         Label:
             id: message_label
             text: root.message
             size_hint_y: 0.05
-            height: 30
+            height: dp(30)
             color: (0.9, 0.9, 1, 1) if root.message_type == 'success' else (1, 0.5, 0.5, 1)
             halign: 'center'
             valign: 'center'
             text_size: self.size
 
-        # Main content
         BoxLayout:
-            padding: [20, 0, 20, 20]
-            spacing: 150
+            orientation: 'vertical' if root.is_mobile else 'horizontal'
+            padding: [dp(10), 0, dp(10), dp(10)] if root.is_mobile else [dp(20), 0, dp(20), dp(20)]
+            spacing: dp(20) if root.is_mobile else dp(150)
             
-            # Left panel - Circle Information
             CircleInfoLayout:
-                size_hint: 0.3, 0.8
+                is_mobile: root.is_mobile
+                size_hint: (1, 0.4) if root.is_mobile else (0.3, 0.8)
 
-            # Right panel - Tables
             BoxLayout:
                 orientation: 'vertical'
-                size_hint: 0.3, 0.8
-                spacing: 30
+                size_hint: (1, 0.6) if root.is_mobile else (0.3, 0.8)
+                spacing: dp(10) if root.is_mobile else dp(30)
 
                 TableLayout:
+                    is_mobile: root.is_mobile
                     size_hint_y: 1/3
-                    height: 120
+                    height: dp(100) if root.is_mobile else dp(120)
                 
                 TableLayout:
+                    is_mobile: root.is_mobile
                     size_hint_y: 1/3
-                    height: 120
+                    height: dp(100) if root.is_mobile else dp(120)
                 
                 TableLayout:
+                    is_mobile: root.is_mobile
                     size_hint_y: 1/3
-                    height: 120
+                    height: dp(100) if root.is_mobile else dp(120)
 ''')
 
 class InfoScreen(Screen):
     message = StringProperty('')
     message_type = StringProperty('success')
+    is_mobile = BooleanProperty(False)
 
     def __init__(self, **kwargs):
         super(InfoScreen, self).__init__(**kwargs)
+        Window.bind(size=self.check_window_size)
+        self.check_window_size()
+    
+    def check_window_size(self, *args):
+        self.is_mobile = Window.width < dp(600)
     
     def handle_print_infos(self):
         try:
@@ -271,8 +297,7 @@ class InfoScreen(Screen):
         except:
             self.message = "Error: Please enter a valid integer for the angle."
             self.message_type = 'error'
-        pass
-    
+        
         Clock.schedule_once(self.clear_message, 5)
     
     def clear_message(self, dt):

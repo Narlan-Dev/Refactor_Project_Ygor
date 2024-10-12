@@ -1,19 +1,21 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from kivy.properties import StringProperty, ObjectProperty
+from kivy.properties import StringProperty, ObjectProperty, BooleanProperty
 from kivy.clock import Clock
+from kivy.metrics import dp, sp
 
 Builder.load_string('''
-<DashboardScreen>:
+<RotationAngleScreen>:
+    is_mobile: app.is_mobile() if hasattr(app, 'is_mobile') else False
     BoxLayout:
         orientation: 'vertical'
-        padding: 20
-        spacing: 20
+        padding: dp(10)
+        spacing: dp(10)
 
         # Title area
         BoxLayout:
             size_hint_y: None
-            height: 100
+            height: dp(100) if not root.is_mobile else dp(80)
             orientation: 'vertical'
             canvas.before:
                 Color:
@@ -23,55 +25,57 @@ Builder.load_string('''
                     size: self.size
 
             BoxLayout:
-                padding: 10, 5
-                spacing: 10
+                orientation: 'horizontal'
+                padding: dp(10), dp(5)
+                spacing: dp(10)
 
                 Label:
                     text: 'Rotation'
-                    font_size: '36sp'
+                    font_size: sp(28) if root.is_mobile else sp(36)
                     bold: True
                     color: 1, 1, 1, 1
                     size_hint_x: None
                     width: self.texture_size[0]
                     halign: 'left'
-                    valign: 'bottom'
+                    valign: 'center'
 
                 Widget:
-                
+                    size_hint_x: 0.1 if root.is_mobile else 0.3
+
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing: 10
-                    size_hint: None, None
-                    size: 320, 40
+                    spacing: dp(10)
+                    size_hint: (0.9, None) if root.is_mobile else (0.6, None)
+                    height: dp(40)
                     pos_hint: {'center_y': 0.5}
 
                     RoundedTextInput:
                         id: angle
                         hint_text: 'Turning angle º'
+                        size_hint_x: 0.6
 
                     RoundedButton:
-                        text: 'Submit angle'
-                        size_hint: None, None
-                        size: 150, 40
+                        text: 'Submit'
+                        size_hint_x: 0.4
                         on_release: root.handle_rotation()
 
             Label:
                 text: 'Boners after rotation'
-                font_size: '24sp'
+                font_size: sp(18) if root.is_mobile else sp(24)
                 color: 0.9, 0.9, 1, 1
                 size_hint_y: None
-                height: 30
+                height: dp(30)
                 halign: 'left'
                 valign: 'top'
                 text_size: self.size
-                padding: 10, 0
+                padding: dp(10), 0
 
         # Message area
         Label:
             id: message_label
             text: root.message
             size_hint_y: None
-            height: 30
+            height: dp(30)
             color: (0.9, 0.9, 1, 1) if root.message_type == 'success' else (1, 0.5, 0.5, 1)
             halign: 'center'
             valign: 'center'
@@ -79,15 +83,15 @@ Builder.load_string('''
 
         # Main content
         BoxLayout:
-            orientation: 'horizontal'
-            spacing: 20
-            padding: 20, 0
+            orientation: 'vertical' if root.is_mobile else 'horizontal'
+            spacing: dp(10)
+            padding: dp(10), 0
 
             # Image or message
             BoxLayout:
                 id: image_container
-                size_hint: None, None
-                size: self.parent.width * 0.4, self.parent.width * 0.4
+                size_hint: (1, None) if root.is_mobile else (None, None)
+                size: (root.width, min(root.height * 0.3, dp(300))) if root.is_mobile else (min(root.width * 0.4, dp(400)), min(root.width * 0.4, dp(400)))
 
                 Label:
                     id: image_placeholder
@@ -100,14 +104,14 @@ Builder.load_string('''
             # Information boxes
             BoxLayout:
                 orientation: 'vertical'
-                spacing: 15
-                size_hint_x: 0.6
-                padding: [150, 0, 0, 0]
+                spacing: dp(10)
+                size_hint: (1, None) if root.is_mobile else (0.6, 1)
+                height: self.minimum_height if root.is_mobile else self.parent.height
                 
                 Label:
-                    text: 'title at information'
+                    text: 'Information'
                     size_hint_y: None
-                    height: 30
+                    height: dp(30)
                     color: 0.9, 0.9, 1, 1
                     halign: 'center'
                     valign: 'center'
@@ -117,12 +121,12 @@ Builder.load_string('''
                     id: test
                     text: 'Information'
                     size_hint_y: None
-                    height: 50
+                    height: dp(50)
 
                 Label:
-                    text: 'title at information'
+                    text: 'Sigma X'
                     size_hint_y: None
-                    height: 30
+                    height: dp(30)
                     color: 0.9, 0.9, 1, 1
                     halign: 'center'
                     valign: 'center'
@@ -132,12 +136,12 @@ Builder.load_string('''
                     id: sigma_x_label
                     text: 'Sigma X:'
                     size_hint_y: None
-                    height: 50
+                    height: dp(50)
 
                 Label:
-                    text: 'title at information'
+                    text: 'Sigma Y'
                     size_hint_y: None
-                    height: 30
+                    height: dp(30)
                     color: 0.9, 0.9, 1, 1
                     halign: 'center'
                     valign: 'center'
@@ -147,12 +151,12 @@ Builder.load_string('''
                     id: sigma_y_label
                     text: 'Sigma Y:'
                     size_hint_y: None
-                    height: 50
+                    height: dp(50)
 
                 Label:
-                    text: 'title at information'
+                    text: 'Txy'
                     size_hint_y: None
-                    height: 30
+                    height: dp(30)
                     color: 0.9, 0.9, 1, 1
                     halign: 'center'
                     valign: 'center'
@@ -162,13 +166,14 @@ Builder.load_string('''
                     id: txy_label
                     text: 'Txy:'
                     size_hint_y: None
-                    height: 50
+                    height: dp(50)
 ''')
 
-class DashboardScreen(Screen):
+class RotationAngleScreen(Screen):
     message = StringProperty('')
     message_type = StringProperty('success')
     image = ObjectProperty(None)
+    is_mobile = BooleanProperty(False)
 
     def update_information(self, sigma_x, sigma_y, txy):
         if sigma_x:

@@ -4,6 +4,7 @@ from kivy.uix.popup import Popup
 from kivy.lang import Builder
 from kivy.app import App
 from views.main_view.main_window import MainWindow
+from kivy.metrics import dp, sp
 
 Builder.load_string(''' 
 <RegistrationForm>:
@@ -18,83 +19,76 @@ Builder.load_string('''
         CardWidget:
             orientation: 'vertical'
             size_hint: None, None
-            size: 500, 500
+            size: min(dp(500), 0.9 * self.parent.width), min(dp(500), 0.9 * self.parent.height)
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
             BoxLayout:
                 size_hint_y: None
-                height: 90
-                spacing: 10
+                height: dp(70)
+                spacing: dp(10)
                 
                 Image:
                     source: 'icons/logo.png'
-                    size_hint: None, None
-                    size: 90, 90
+                    size_hint: 0.5, 0.5
+                    size: dp(70), dp(70)
                     
                 TitleLabel:
                     text: 'Círculo de Mohr'
-                    font_size: '40sp'
+                    font_size: sp(28)
 
             BoxLayout:
                 orientation: 'vertical'
-                spacing: 30
-                padding: [0, 20]
+                spacing: dp(20)
+                padding: [0, dp(20)]
 
                 # Pairing labels and text inputs
                 BoxLayout:
-                    orientation: 'horizontal'
-                    spacing: 10
+                    orientation: 'vertical'
+                    spacing: dp(5)
                     size_hint_y: None
-                    height: 40
+                    height: dp(80)
 
                     StylizedLabel:
                         text: 'Tensão σx'
-                        size_hint_x: None
-                        width: 150  # Fixed width for alignment
 
                     StylizedTextInput:
                         id: sigma_x
                         hint_text: 'MPa'
-                        size_hint_x: 1  # Fill the remaining space
+                        size_hint_x: 1
 
                 BoxLayout:
-                    orientation: 'horizontal'
-                    spacing: 10
+                    orientation: 'vertical'
+                    spacing: dp(5)
                     size_hint_y: None
-                    height: 40
+                    height: dp(80)
 
                     StylizedLabel:
                         text: 'Tensão σy'
-                        size_hint_x: None
-                        width: 150  # Fixed width for alignment
 
                     StylizedTextInput:
                         id: sigma_y
                         hint_text: 'MPa'
-                        size_hint_x: 1  # Fill the remaining space
+                        size_hint_x: 1
 
                 BoxLayout:
-                    orientation: 'horizontal'
-                    spacing: 10
+                    orientation: 'vertical'
+                    spacing: dp(5)
                     size_hint_y: None
-                    height: 40
+                    height: dp(80)
 
                     StylizedLabel:
                         text: 'Tensão τxy'
-                        size_hint_x: None
-                        width: 150  # Fixed width for alignment
 
                     StylizedTextInput:
                         id: txy
                         hint_text: 'MPa'
-                        size_hint_x: 1  # Fill the remaining space
+                        size_hint_x: 1
 
             StylizedButton:
                 text: 'SUBMETER'
                 pos_hint: {'center_x': 0.5}
                 on_release: root.open_next_screen()
 ''')
-
 
 class RegistrationForm(FloatLayout):
     def validate_inputs(self):
@@ -108,7 +102,7 @@ class RegistrationForm(FloatLayout):
                 title='Input Error',
                 content=Label(text='Please enter valid numerical values for all fields.'),
                 size_hint=(None, None),
-                size=(400, 200)
+                size=(min(dp(400), 0.8 * self.width), dp(200))
             )
             popup.open()
             return False
