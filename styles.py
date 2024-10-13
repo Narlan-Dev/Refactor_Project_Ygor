@@ -21,7 +21,7 @@ styles = '''
 <CardWidget@BoxLayout>:
     canvas.before:
         Color:
-            rgba: app.colors['primary']
+            rgba: app.colors['sidebar']
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -32,21 +32,21 @@ styles = '''
 <StylizedButton@Button>:
     background_color: 0, 0, 0, 0
     background_normal: ''
-    color: app.colors['text_dark']
+    color: app.colors['text_light']
     font_size: sp(14)
     bold: True
     size_hint: None, None
     size: min(dp(200), 0.8 * self.parent.width), dp(50)
     canvas.before:
         Color:
-            rgba: app.colors['light'] if self.state == 'normal' else app.colors['button_hover']
+            rgba: app.colors['return_button'] if self.state == 'normal' else app.colors['button_hover']
         RoundedRectangle:
             pos: self.pos
             size: self.size
             radius: [dp(15),]
 
 <StylizedTextInput@TextInput>:
-    background_color: app.colors['light']
+    background_color: 0, 0, 0, 0 #app.colors['light']
     foreground_color: 0, 0, 0, 1
     size_hint: None, None
     size: min(dp(250), 0.8 * self.parent.width), dp(40)

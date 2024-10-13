@@ -5,12 +5,13 @@ from kivy.lang import Builder
 from kivy.app import App
 from views.main_view.main_window import MainWindow
 from kivy.metrics import dp, sp
+from styles import (colors)
 
 Builder.load_string(''' 
 <RegistrationForm>:
     canvas.before:
         Color:
-            rgba: 1, 1, 1, 1
+            rgba: app.colors['background']
         Rectangle:
             pos: self.pos
             size: self.size

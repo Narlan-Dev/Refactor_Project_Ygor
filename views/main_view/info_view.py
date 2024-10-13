@@ -26,16 +26,18 @@ Builder.load_string('''
     BoxLayout:
         orientation: 'vertical'
         size_hint_y: None
-        height: dp(70) if root.is_mobile else dp(80)
+        height: self.minimum_height
         
         Label:
             text: 'Informações do círculo'
             color: 1, 1, 1, 1
-            font_size: sp(20) if root.is_mobile else sp(30)
+            font_size: min(sp(20), self.height * 0.6) if root.is_mobile else min(sp(20), self.height * 0.8)
             bold: True
             size_hint_y: None
-            height: dp(50) if root.is_mobile else dp(60)
-            padding: [dp(15), 0]
+            height: self.texture_size[1] + dp(20)
+            text_size: self.width - dp(30), None
+            halign: 'center'
+            valign: 'middle'
         
         Widget:
             size_hint_y: None
@@ -234,7 +236,7 @@ Builder.load_string('''
             height: dp(30) if root.is_mobile else dp(40)
             halign: 'left'
             text_size: self.width, None
-            padding: [dp(10), 0] if root.is_mobile else [dp(20), 0]
+            padding: [dp(10), 0] if root.is_mobile else [dp(20), 0, dp(50), dp(50)]
             
         Label:
             id: message_label

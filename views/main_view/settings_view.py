@@ -31,7 +31,7 @@ Builder.load_string('''
         Label:
             text: 'Informações do círculo'
             color: 1, 1, 1, 1
-            font_size: sp(20) if root.is_mobile else sp(30)
+            font_size: sp(30) if root.is_mobile else sp(30)
             bold: True
             size_hint_y: None
             height: dp(50) if root.is_mobile else dp(60)

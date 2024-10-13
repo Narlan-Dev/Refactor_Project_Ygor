@@ -1,57 +1,57 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.lang import Builder
+from kivy.metrics import dp
 import os
 
 Builder.load_string('''
 <CircleView>:
     orientation: 'vertical'
-    padding: 20
-    spacing: 10
+    padding: dp(10)
+    spacing: dp(10)
     
     Image:
         id: image_display
         source: ''
         allow_stretch: True
         keep_ratio: True
+        size_hint: 1, 0.9
         
     BoxLayout:
-        size_hint_y: None
-        height: 50
-        spacing: 20
-        FloatLayout:
-            center_x: self.parent.center_x
-            center_y: self.parent.center_y
-            
-            #Steps layout
-            BoxLayout:
-                size_hint: None, None
-                size: self.minimum_size
-                center_x: self.parent.center_x
-                orientation: 'horizontal'
-                spacing: 100
-                padding: 10
+        size_hint_y: 0.1
+        padding: dp(10)
+        spacing: dp(10)
+        
+        NavigationButton:
+            text: '<'
+            on_release: root.previous_image()
+            size_hint_x: None
+            width: self.height
 
-                NavigationButton:
-                    text: '<'
-                    on_release: root.previous_image()
+        Label:
+            id: step_label
+            text: 'STEP: 0'
+            size_hint_x: 1
+            canvas.before:
+                Color:
+                    rgba: 0.231, 0.282, 0.761, 1  # #3B48C2
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(5),]
 
-                Label:
-                    id: step_label
-                    text: 'STEP: 0'
-                    size_hint_x: None
-                    width: 200
-                    canvas.before:
-                        Color:
-                            rgba: 0.231, 0.282, 0.761, 1  # #3B48C2
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                            radius: [5,]
+        NavigationButton:
+            text: '>'
+            on_release: root.next_image()
+            size_hint_x: None
+            width: self.height
 
-                NavigationButton:
-                    text: '>'
-                    on_release: root.next_image()
+<NavigationButton@Button>:
+    background_color: 0.231, 0.282, 0.761, 1  # #3B48C2
+    color: 1, 1, 1, 1
+    size_hint: None, None
+    size: dp(40), dp(40)
+    font_size: dp(20)
 ''')
 
 class CircleView(BoxLayout):

@@ -173,7 +173,7 @@ Builder.load_string('''
                 width: dp(80) if root.is_mobile else self.parent.width
                 height: dp(50) if not root.is_mobile else self.parent.height
                 background_color: 0, 0, 0, 0
-                color: 1, 1, 1, 1  # White text color
+                color: 1, 1, 1, 1
                 on_release: root.return_to_registration()
                 canvas.before:
                     Color:

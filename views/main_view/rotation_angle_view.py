@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from kivy.properties import StringProperty, ObjectProperty, BooleanProperty
 from kivy.clock import Clock
 from kivy.metrics import dp, sp
+from kivy.core.window import Window
 
 Builder.load_string('''
 <RotationAngleScreen>:
@@ -55,9 +56,22 @@ Builder.load_string('''
                         size_hint_x: 0.6
 
                     RoundedButton:
-                        text: 'Submit'
-                        size_hint_x: 0.4
+                        size_hint_x: 0.2
                         on_release: root.handle_rotation()
+                        BoxLayout:
+                            pos: self.parent.pos
+                            size: self.parent.size
+                            Image:
+                                source: 'icons/qualquer.png'
+                                center_y: root.center_y
+                                size: dp(20), dp(20)
+                                opacity: 1 if root.is_mobile else 0
+                            Label:
+                                text: 'Submit'
+                                font_size: sp(14)
+                                color: 1, 1, 1, 1
+                                size_hint: (None, 1) if not root.is_mobile else (0, 0)
+                                opacity: 0 if root.is_mobile else 1
 
             Label:
                 text: 'Boners after rotation'
@@ -83,15 +97,15 @@ Builder.load_string('''
 
         # Main content
         BoxLayout:
-            orientation: 'vertical' if root.is_mobile else 'horizontal'
+            orientation: 'vertical'
             spacing: dp(10)
             padding: dp(10), 0
 
             # Image or message
             BoxLayout:
                 id: image_container
-                size_hint: (1, None) if root.is_mobile else (None, None)
-                size: (root.width, min(root.height * 0.3, dp(300))) if root.is_mobile else (min(root.width * 0.4, dp(400)), min(root.width * 0.4, dp(400)))
+                size_hint: (1, 0.5)
+                height: min(root.height * 0.3, dp(300)) if root.is_mobile else min(root.width * 0.4, dp(400))
 
                 Label:
                     id: image_placeholder
@@ -102,71 +116,77 @@ Builder.load_string('''
                     text_size: self.size
 
             # Information boxes
-            BoxLayout:
-                orientation: 'vertical'
-                spacing: dp(10)
-                size_hint: (1, None) if root.is_mobile else (0.6, 1)
-                height: self.minimum_height if root.is_mobile else self.parent.height
-                
-                Label:
-                    text: 'Information'
-                    size_hint_y: None
-                    height: dp(30)
-                    color: 0.9, 0.9, 1, 1
-                    halign: 'center'
-                    valign: 'center'
-                    text_size: self.size
+            ScrollView:
+                size_hint: (1, 0.5)
+                do_scroll_x: False
+                do_scroll_y: True
 
-                RoundedLabel:
-                    id: test
-                    text: 'Information'
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: dp(10)
                     size_hint_y: None
-                    height: dp(50)
+                    height: self.minimum_height
+                    padding: 0, dp(10)
+                    
+                    Label:
+                        text: 'Information'
+                        size_hint_y: None
+                        height: dp(30)
+                        color: 0.9, 0.9, 1, 1
+                        halign: 'center'
+                        valign: 'center'
+                        text_size: self.size
 
-                Label:
-                    text: 'Sigma X'
-                    size_hint_y: None
-                    height: dp(30)
-                    color: 0.9, 0.9, 1, 1
-                    halign: 'center'
-                    valign: 'center'
-                    text_size: self.size
+                    RoundedLabel:
+                        id: test
+                        text: 'Information'
+                        size_hint_y: None
+                        height: dp(50)
 
-                RoundedLabel:
-                    id: sigma_x_label
-                    text: 'Sigma X:'
-                    size_hint_y: None
-                    height: dp(50)
+                    Label:
+                        text: 'Sigma X'
+                        size_hint_y: None
+                        height: dp(30)
+                        color: 0.9, 0.9, 1, 1
+                        halign: 'center'
+                        valign: 'center'
+                        text_size: self.size
 
-                Label:
-                    text: 'Sigma Y'
-                    size_hint_y: None
-                    height: dp(30)
-                    color: 0.9, 0.9, 1, 1
-                    halign: 'center'
-                    valign: 'center'
-                    text_size: self.size
+                    RoundedLabel:
+                        id: sigma_x_label
+                        text: 'Sigma X:'
+                        size_hint_y: None
+                        height: dp(50)
 
-                RoundedLabel:
-                    id: sigma_y_label
-                    text: 'Sigma Y:'
-                    size_hint_y: None
-                    height: dp(50)
+                    Label:
+                        text: 'Sigma Y'
+                        size_hint_y: None
+                        height: dp(30)
+                        color: 0.9, 0.9, 1, 1
+                        halign: 'center'
+                        valign: 'center'
+                        text_size: self.size
 
-                Label:
-                    text: 'Txy'
-                    size_hint_y: None
-                    height: dp(30)
-                    color: 0.9, 0.9, 1, 1
-                    halign: 'center'
-                    valign: 'center'
-                    text_size: self.size
+                    RoundedLabel:
+                        id: sigma_y_label
+                        text: 'Sigma Y:'
+                        size_hint_y: None
+                        height: dp(50)
 
-                RoundedLabel:
-                    id: txy_label
-                    text: 'Txy:'
-                    size_hint_y: None
-                    height: dp(50)
+                    Label:
+                        text: 'Txy'
+                        size_hint_y: None
+                        height: dp(30)
+                        color: 0.9, 0.9, 1, 1
+                        halign: 'center'
+                        valign: 'center'
+                        text_size: self.size
+
+                    RoundedLabel:
+                        id: txy_label
+                        text: 'Txy:'
+                        size_hint_y: None
+                        height: dp(50)
 ''')
 
 class RotationAngleScreen(Screen):
@@ -174,7 +194,13 @@ class RotationAngleScreen(Screen):
     message_type = StringProperty('success')
     image = ObjectProperty(None)
     is_mobile = BooleanProperty(False)
-
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Window.bind(size=self.check_window_size)
+        self.check_window_size()
+    
+    
     def update_information(self, sigma_x, sigma_y, txy):
         if sigma_x:
             self.ids.test.text = f"Test: {int(sigma_x) - 1}"
@@ -215,3 +241,6 @@ class RotationAngleScreen(Screen):
         self.image = Image(source='public/teste1.png', allow_stretch=True, keep_ratio=True)
         self.ids.image_container.clear_widgets()
         self.ids.image_container.add_widget(self.image)
+        
+    def check_window_size(self, *args):
+        self.is_mobile = Window.width < dp(600)
